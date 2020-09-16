@@ -30,6 +30,5 @@ int main(){
     cin >> n >> k;
     long long res = solve(0, 0);
     cout << res << endl;
-    //changed
     return 0;
 }
