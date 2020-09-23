@@ -96,6 +96,8 @@ int cover(){
             }
             if(p.second + 1 < c) p = make_pair(p.first, p.second + 1);
             else p = make_pair(p.first + 1, 0);
+
+            if(!inRange(p.first, p.second)) break;
         }
     }
     return countAttachedStickers();
