@@ -1,15 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
-#include <fstream> // test
-#include <string>
 #define endl "\n"
 #define MAX_ROTATION 4
 using namespace std;
 int screen[41][41];
 vector<vector<pair<int, int> > > stickers(100, vector<pair<int, int>>(100));
 int r, c, k;
-ofstream out("test.txt"); //test
 
 void makeStickers(){
     int row, col, tmp;
@@ -51,12 +48,12 @@ bool set(const int type, const int delta, const int y, const int x){
         const int nx = x + stickers[type][i].second;
         if(!inRange(ny, nx)) {
             ret = false; 
-            out << "(nx, ny) : " + to_string(nx) + " " + to_string(nx) << endl;
         }
         else if((screen[ny][nx] += delta) > 1) ret = false;
     }
     return ret;
 }
+/*나는 이 함수를 사용하고 싶었는데, 구현하기가 쉽지가 않아서 다른 방법을 사용했다.*/
 // range checking이 된다. 만약 -1, -1 페어를 리턴했다는 것은
 // 1. out-of-range error 이거나 2. 빈칸을 정말로 못찾았다는 뜻이다.
 // case 1, 2 모두 다음 스티커로 넘어가야함을 의미한다.
@@ -89,20 +86,6 @@ int cover(){
         auto p = make_pair(0, 0);
         while(p.first != -1 && !isPasted){// 스티커가 붙거나, range를 벗어나면 while문을 탈출하여 다음 type을 시도한다
             for(int rotate = 0; rotate < MAX_ROTATION; ++rotate){
-                out << "type : " << type << endl;//test start
-                out << "rotation : " << rotate << endl;
-                out << "Blank ( x, y ) = " << "(" << p.second << ", " << p.first << ")" << endl;
-                out << "sticker : " << endl;
-                for(int i = 0; i < stickers[type].size() - 1; ++i){
-                    out << "(x, y) = " << "(" << stickers[type][i].second << ", " << stickers[type][i].first << ")" << endl;
-                }
-                for(int i = 0; i < r; ++i){
-                    for(int j = 0 ; j < c; ++j){
-                        out << screen[i][j] << " ";
-                    }
-                    out << endl;
-                }
-                out << endl; // test end
                 if(set(type, 1, p.first, p.second)){ //screen에 stkicker를 붙인다.
                     isPasted = true;
                     break;
@@ -113,14 +96,9 @@ int cover(){
             }
             if(p.second + 1 < c) p = make_pair(p.first, p.second + 1);
             else p = make_pair(p.first + 1, 0);
-            
-            if(!inRange(p.first, p.second)) {out << "!inRange executed " + to_string(p.second) + " " + to_string(p.first) << endl; break;}
-            // p = findNextBlank(p.first + 1, 0);
         }
     }
-    int ret = countAttachedStickers();
-    out.close(); //test
-    return ret;
+    return countAttachedStickers();
 }
 
 int main(){
