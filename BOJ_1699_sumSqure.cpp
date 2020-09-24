@@ -3,19 +3,17 @@
 #define endl "\n"
 
 using namespace std;
-const int INF = 987654321;
 int n;
-
+int cache[100000];
 // n range 1 ~ 100000
 
-int go(int cnt, int curSum, int picked){
-    if(curSum > n) return INF;
-    if(curSum == n) return cnt;
-    if(picked == 0) return INF;
-
-    int ret = min(go(cnt + 1, curSum + picked * picked, picked), (go(cnt + 1, curSum + picked * picked, picked - 1)));
-    ret = min(ret, go(cnt, curSum, picked - 1));
-    return ret;
+void solve(){
+    for(int i = 1; i <= n; ++i) cache[i] = i;
+    for(int i = 2; i <= n; ++i){
+        for(int j = 2; j * j <= i; ++j){
+            cache[i] = min(cache[i], cache[i - j * j] + 1);
+        }
+    }
 }
 
 int main(){
@@ -23,6 +21,7 @@ int main(){
     cin.tie(NULL);
     cout.tie(NULL);
     cin >> n;
-    cout << go(0, 0, n - 1);
+    solve();
+    cout << cache[n];
     return 0;
 }
