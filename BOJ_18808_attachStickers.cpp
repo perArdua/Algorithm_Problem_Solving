@@ -25,8 +25,8 @@ void makeStickers(){
                 }
             }
         }
-        stickers[type].resize(decideResize);
-        stickers[type].push_back(make_pair(row, col));
+        stickers[type].resize(decideResize + 1);
+        stickers[type].back() = make_pair(row, col);
     }
 }
 int countAttachedStickers(){
@@ -46,29 +46,11 @@ bool set(const int type, const int delta, const int y, const int x){
     for(int i = 0; i < stickers[type].size() - 1; ++i){ // 맨 마지막에는 해당 스티커의 row, col 정보가 들어 있으므로 이를 제외한다.
         const int ny = y + stickers[type][i].first;
         const int nx = x + stickers[type][i].second;
-        if(!inRange(ny, nx)) {
-            ret = false; 
-        }
+        if(!inRange(ny, nx)) ret = false; 
         else if((screen[ny][nx] += delta) > 1) ret = false;
     }
     return ret;
 }
-/*나는 이 함수를 사용하고 싶었는데, 구현하기가 쉽지가 않아서 다른 방법을 사용했다.*/
-// range checking이 된다. 만약 -1, -1 페어를 리턴했다는 것은
-// 1. out-of-range error 이거나 2. 빈칸을 정말로 못찾았다는 뜻이다.
-// case 1, 2 모두 다음 스티커로 넘어가야함을 의미한다.
-// pair<int, int> findNextBlank(int y, int x){ 
-//     int ry = -1, rx = -1;
-//     for(int i = y; i < r; ++i){
-//         for(int j = x; j < c; ++j){
-//             if(!screen[i][j]){
-//                 ry = i, rx = j; break;
-//             }
-//         }
-//         if(ry != -1) break;
-//     }
-//     return make_pair(ry, rx);
-// }
 
 void rotation(const int type){ // 90도 C.W. 회전
     for(int i = 0; i < stickers[type].size() - 1; ++i){ // 맨 마지막에는 해당 스티커의 row, col 정보가 들어 있으므로 이를 제외한다.
@@ -78,26 +60,25 @@ void rotation(const int type){ // 90도 C.W. 회전
     swap(stickers[type].back().first, stickers[type].back().second);
 }
 
-
 int cover(){
     for(int type = 0; type < k; ++type){
-        bool isPasted = false;
-        // auto p = findNextBlank(0, 0); // 스티커가 안붙어 있는 칸을 찾는다.
-        auto p = make_pair(0, 0);
-        while(p.first != -1 && !isPasted){// 스티커가 붙거나, range를 벗어나면 while문을 탈출하여 다음 type을 시도한다
-            for(int rotate = 0; rotate < MAX_ROTATION; ++rotate){
-                if(set(type, 1, p.first, p.second)){ //screen에 stkicker를 붙인다.
-                    isPasted = true;
-                    break;
-                }else{
-                    set(type, -1, p.first, p.second); // 만약 sticker가 붙지 않았다면 위에 if에서 붙였던 부분을 떼버린다.
-                    rotation(type); // 해당 스티커를 회전시킨다.
-                }
-            }
-            if(p.second + 1 < c) p = make_pair(p.first, p.second + 1);
-            else p = make_pair(p.first + 1, 0);
+        bool finished = false;
+        for(int rotate = 0; rotate < MAX_ROTATION; ++rotate){
 
-            if(!inRange(p.first, p.second)) break;
+            for(int y = 0; y < r - stickers[type].back().first + 1; ++y){
+                for(int x = 0; x < c - stickers[type].back().second + 1; ++x){
+                    if(set(type, 1, y, x)){
+                        finished = true;
+                        break;
+                    }else{
+                        set(type, -1, y, x);
+                    }
+                }
+                if(finished) break;
+            }
+
+            if(finished) break;
+            rotation(type);
         }
     }
     return countAttachedStickers();
