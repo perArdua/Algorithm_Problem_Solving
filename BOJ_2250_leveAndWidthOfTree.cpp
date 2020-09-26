@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #define endl "\n"
 using namespace std;
 
@@ -52,6 +53,30 @@ void calc(){
     }
 }
 
+void postorder(int x, bool* v){
+    if(x == -1) return;
+
+    postorder(node[x].left, v);
+    postorder(node[x].right, v);
+    v[x] = true;
+}
+
+int findRoot(){
+    bool visited[10001];
+    bool isFind = true;
+    for(int i = 1; i <= n; ++i){
+        memset(visited, 0, sizeof(visited));
+        postorder(i, visited);
+        for(int j = 1; j <= n; ++j){
+            if(!visited[j]){
+                isFind = false;
+                break;
+            }
+        }
+        if(isFind) return i;
+    }
+    return INF;
+}
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -63,10 +88,10 @@ int main(){
         node[parent].left = leftChild;
         node[parent].right = rightChild;
     }
-    inorder(1);
-    preorder(1, 1);
+    int root = findRoot();
+    inorder(root);
+    preorder(root, 1);
     calc();
     cout << calLevel << " " << calWidth;    
     return 0;
 }
-// ?
