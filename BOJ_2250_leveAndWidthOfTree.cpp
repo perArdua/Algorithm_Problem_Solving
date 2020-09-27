@@ -1,61 +1,33 @@
 #include <iostream>
 #include <cstring>
+#include <cstdlib>
 #define endl "\n"
 using namespace std;
 
-struct Node{
+typedef struct{
     int left;
     int right;
     int col;
-    int depth;
-};
+    int row;
+}Node;
 
 Node node[10001];
-const int INF = 987654321;
 int n;
-int c = 1;
-int calWidth = -1, calLevel = INF;
+int c = 0;
+int calWidth = 1, calLevel = 1;
 
-void inorder(int x){
+void inorder(int x, int level){
     if(x == -1) return;
 
-    inorder(node[x].left);
-    node[x].col = c;
-    ++c;
-    inorder(node[x].right);
-}
-
-void preorder(int x, int level){
-    if(x == -1) return;
-    
-    node[x].depth = level;
-    preorder(node[x].left, level + 1);
-    preorder(node[x].right, level + 1);
-}
-
-void calc(){
-    for(int curNode = 1; curNode <= n; ++curNode){
-        for(int nextNode = 1; nextNode <=n; ++nextNode){
-            if(curNode == nextNode) continue;
-            if(node[curNode].depth != node[nextNode].depth) continue;
-           
-            int res = abs(node[curNode].col - node[nextNode].col) + 1;
-            if(res > calWidth){
-                calWidth = res;
-                calLevel = node[curNode].depth;
-            }else if(res == calWidth){
-                if(node[curNode].depth < calLevel){
-                    calLevel = node[curNode].depth;
-                }
-            }
-
-        }
-    }
+    inorder(node[x].left, level + 1);
+    node[x].col = ++c;
+    node[x].row = level;
+    inorder(node[x].right, level + 1);
 }
 
 void postorder(int x, bool* v){
     if(x == -1) return;
-
+    
     postorder(node[x].left, v);
     postorder(node[x].right, v);
     v[x] = true;
@@ -65,7 +37,7 @@ int findRoot(){
     bool visited[10001];
     bool isFind = true;
     for(int i = 1; i <= n; ++i){
-        memset(visited, 0, sizeof(visited));
+        memset(visited, false, sizeof(visited));
         postorder(i, visited);
         for(int j = 1; j <= n; ++j){
             if(!visited[j]){
@@ -75,8 +47,28 @@ int findRoot(){
         }
         if(isFind) return i;
     }
-    return INF;
+    return -1;
 }
+
+void calc(){
+    for(int curNode = 1; curNode <= n; ++curNode){
+        for(int nextNode = 1; nextNode <=n; ++nextNode){
+            if(curNode == nextNode) continue;
+            if(node[curNode].row != node[nextNode].row) continue;
+           
+            int res = abs(node[curNode].col - node[nextNode].col) + 1;
+            if(res > calWidth){
+                calWidth = res;
+                calLevel = node[curNode].row;
+            }else if(res == calWidth){
+                if(node[curNode].row < calLevel){
+                    calLevel = node[curNode].row;
+                }
+            }
+        }
+    }
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -88,10 +80,8 @@ int main(){
         node[parent].left = leftChild;
         node[parent].right = rightChild;
     }
-    int root = findRoot();
-    inorder(root);
-    preorder(root, 1);
+    inorder(findRoot(), 1);
     calc();
-    cout << calLevel << " " << calWidth;    
+    cout << calLevel << " " << calWidth;
     return 0;
 }
