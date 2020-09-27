@@ -1,19 +1,10 @@
 #include <iostream>
 #include <string>
+#include <limits>
+#include <vector>
 #define endl "\n"
 
 using namespace std;
-
-int dfs(int n, int cnt, int x){
-    if(n == cnt) return x - 1;
-
-    string tmp = to_string(x);
-    if(tmp.find("666") != string::npos){
-        cnt += 1;
-    }
-
-    return dfs(n, cnt, x + 1);
-}
 
 int main(){
     ios_base::sync_with_stdio(false);
@@ -21,6 +12,17 @@ int main(){
     cout.tie(NULL);
     int n;
     cin >> n;
-    cout << dfs(n, 0, 666);
+    int cnt = 0;
+    vector<int> ans(10000);
+    for(int i =666; i <= numeric_limits<int>::max(); ++i){
+        if(to_string(i).find("666") != string::npos){
+            cnt += 1;
+            ans[cnt - 1] = i;
+        }
+        if(cnt == n){
+            cout << ans[n - 1] << endl;
+            return 0;
+        }
+    }
     return 0;
 }
