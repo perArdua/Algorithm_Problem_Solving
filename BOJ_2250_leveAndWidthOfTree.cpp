@@ -14,9 +14,9 @@ typedef struct{
 Node node[10001];
 int n;
 int c = 0;
-int calWidth = 1, calLevel = 1;
+int calWidth = 1, calLevel = 1; // 기본 값을 각각 1로 지정한 이유는 최소로 가질 수 있는 너비와 레벨이 모두 1 이기 때문이다. (root일 경우)
 
-void inorder(int x, int level){
+void inorder(int x, int level){ // 순회를 통하여 각 노드들의 열 번호와, 행 번호를 표시한다
     if(x == -1) return;
 
     inorder(node[x].left, level + 1);
@@ -25,7 +25,7 @@ void inorder(int x, int level){
     inorder(node[x].right, level + 1);
 }
 
-void postorder(int x, bool* v){
+void postorder(int x, bool* v){ // 순회를 통하여 각 노드들을 방문한다
     if(x == -1) return;
     
     postorder(node[x].left, v);
@@ -33,11 +33,11 @@ void postorder(int x, bool* v){
     v[x] = true;
 }
 
-int findRoot(){
+int findRoot(){ // 루트 노드의 번호를 반환한다
     bool visited[10001];
-    bool isFind = true;
-    for(int i = 1; i <= n; ++i){
-        memset(visited, false, sizeof(visited));
+    for(int i = 1; i <= n; ++i){ // i번 노드를 루트라고 가정하고 방문을 시도한다
+        bool isFind = true;
+        memset(visited, 0, sizeof(visited));
         postorder(i, visited);
         for(int j = 1; j <= n; ++j){
             if(!visited[j]){
@@ -50,7 +50,7 @@ int findRoot(){
     return -1;
 }
 
-void calc(){
+void calc(){ // 레벨이 같은 노드들에 대해서만 너비를 계산한다.
     for(int curNode = 1; curNode <= n; ++curNode){
         for(int nextNode = 1; nextNode <=n; ++nextNode){
             if(curNode == nextNode) continue;
