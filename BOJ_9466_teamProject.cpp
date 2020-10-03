@@ -11,7 +11,7 @@ int dfs(int curNode){
     if(ok[curNode] == visited) return curNode;
     if(ok[curNode] == cycle || ok[curNode] == notCycle) return notCycle;
     ok[curNode] = visited;
-
+    
     int nextNode = connection[curNode];
     int res = dfs(nextNode);
     if(res >= 0){
