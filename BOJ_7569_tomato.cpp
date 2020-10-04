@@ -18,8 +18,8 @@ class Point{
         }
 };
 
-const int dy[] = {-1, 1, 0, 0};
-const int dx[] = {0, 0, -1, 1};
+const int movement[][3] = { {0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}, {1, 0, 0}, {-1, 0, 0} }; // z, y, x
+
 
 int boxes[100][100][100];
 int row, col, height;
@@ -64,35 +64,28 @@ void findStartPoint(queue<Point>& q){
     }
 }
 
+bool inRange(int z, int y, int x){
+    return ((z >= 0 && z < height) && (y >= 0 && y < row) && (x >= 0 && x < col));
+}
+
 void dfs(){
     queue<Point> q;
     findStartPoint(q);
     while(!q.empty()){
         Point point = q.front(); q.pop();
+        int z = point.getHeight();
         int y = point.getRow();
         int x = point.getCol();
-        int z = point.getHeight();
-        for(int dir = 0; dir < 4; ++dir){
-            int ny = y + dy[dir];
-            int nx = x + dx[dir];
-            if(!((ny >= 0 && ny < row) && (nx >= 0 && nx < col))) continue;
-            if(boxes[z][ny][nx] != 0) continue;
-            boxes[z][ny][nx] = boxes[z][y][x] + 1;
-            q.push(Point(z, ny, nx));
-        }
-        
-        if(z - 1 >= 0 && z - 1 < height){
-            if(boxes[z-1][y][x] == 0){
-                boxes[z-1][y][x] = boxes[z][y][x] + 1;
-                q.push(Point(z - 1, y, x));
-            }
-        }
+        for(int dir = 0; dir < 6; ++dir){
+            int nz = z + movement[dir][0];
+            int ny = y + movement[dir][1];
+            int nx = x + movement[dir][2];
 
-        if(z + 1 >= 0 && z + 1 < height){
-            if(boxes[z+1][y][x] == 0){
-                boxes[z+1][y][x] = boxes[z][y][x] + 1;
-                q.push(Point(z + 1, y, x));
-            }
+            if(!inRange(nz, ny, nx)) continue;
+            if(boxes[nz][ny][nx] != 0) continue;
+
+            boxes[nz][ny][nx] = boxes[z][y][x] + 1;
+            q.push(Point(nz, ny, nx));
         }
     }
 }
@@ -113,7 +106,7 @@ int main(){
     dfs();
     int res = findAns(height, row, col);
     if(res == -1){
-        cout << -1;
+        cout << res;
         return 0;
     }else{
         cout << res - 1;
@@ -121,4 +114,3 @@ int main(){
 
     return 0;
 }
-// ?
