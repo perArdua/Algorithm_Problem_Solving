@@ -17,7 +17,7 @@ struct Info{
 
 int row, col, canBreakBlocks;
 int map[1000][1000];
-int dist[1000][1000][2];
+int dist[1000][1000][11];
 
 void input(){
     for(int i = 0; i < row; ++i){
@@ -33,7 +33,7 @@ inline bool inRange(int y, int x){
     return ((y >= 0 && y < row) && (x >= 0 && x < col));
 }
 
-int bfs(){
+int bfs(){g
     queue<Info> q;
     q.push(Info{0, 0, canBreakBlocks});
     dist[0][0][canBreakBlocks] = 1;
