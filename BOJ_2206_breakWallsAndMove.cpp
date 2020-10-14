@@ -30,11 +30,6 @@ void input(){
     }
 }
 
-inline int min(int a, int b){
-    if(a > b) return b;
-    return a;
-}
-
 inline bool inRange(int y, int x){
     return ((y >= 0 && y < row) && (x >= 0 && x < col));
 }
@@ -72,7 +67,6 @@ int main(){
     cout.tie(NULL);
     cin >> row >> col;
     input();
-    memset(dist, 0, sizeof(dist));
     cout << bfs() << endl;
     return 0;
 }
