@@ -33,7 +33,7 @@ inline bool inRange(int y, int x){
     return ((y >= 0 && y < row) && (x >= 0 && x < col));
 }
 
-int bfs(){g
+int bfs(){
     queue<Info> q;
     q.push(Info{0, 0, canBreakBlocks});
     dist[0][0][canBreakBlocks] = 1;
@@ -45,7 +45,7 @@ int bfs(){g
 
             if(!inRange(ny, nx)) continue;
 
-            if(map[ny][nx] && cur.block){
+            if(map[ny][nx] && cur.block && !dist[ny][nx][cur.block - 1]){
                 dist[ny][nx][cur.block - 1] = dist[cur.y][cur.x][cur.block] + 1;
                 q.push(Info(ny, nx, cur.block - 1));
             }else if(!map[ny][nx] && !dist[ny][nx][cur.block]){
