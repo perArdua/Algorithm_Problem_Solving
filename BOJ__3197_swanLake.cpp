@@ -6,6 +6,7 @@
 #define water 0
 #define ice 1
 #define swan 2
+#define visited 3
 using namespace std;
 
 const int dy[] = {-1, 1 ,0 ,0};
@@ -18,7 +19,6 @@ struct Point{
 
 int row, col;
 int map[1500][1500];
-bool check[1500][1500];
 
 vector<Point> swanPos;
 queue<Point> waterQ;
@@ -110,13 +110,13 @@ bool isSameSection(){
                 nextStep.push(Point(ny, nx));
                 continue;
             }
-            if(check[ny][nx]) continue;
+            if(map[ny][nx] == visited) continue;
             /* inRange and isWater and isVisited  */
             if(ny == swanPos[1].y && nx == swanPos[1].x){
                 return true;
             }else{
                 g.push(Point(ny, nx));
-                check[ny][nx] = true;
+                map[ny][nx] = visited;
             }
         }
     }
@@ -140,7 +140,7 @@ int dfsSolve(){
 
 void initStart(){
     g.push(swanPos[0]);
-    check[swanPos[0].y][swanPos[0].x] = true;
+    map[swanPos[0].y][swanPos[0].x] = visited;
 }
 
 int main(){
