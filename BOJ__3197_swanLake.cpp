@@ -19,6 +19,8 @@ struct Point{
 
 int row, col;
 int map[1500][1500];
+bool check[1500][1500];
+
 vector<Point> swanPos;
 queue<Point> waterQ;
 
@@ -51,10 +53,19 @@ void input(){
     }
 }
 
+void output(){
+    for(int i = 0; i < row; ++i){
+        for(int j = 0; j < col; ++j){
+            cout << map[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
 void findFirstAdjacent(){
     for(int i = 0; i < row; ++i){
         for(int j = 0; j < col; ++j){
-            if(map[i][j] == water){
+            if(map[i][j] != ice){
                 for(int dir = 0; dir < 4; ++dir){
                     const int ny = i + dy[dir];
                     const int nx = j + dx[dir];
@@ -87,7 +98,6 @@ void melting(){
 }
 
 bool isSameSection(){
-    bool check[1500][1500];
     memset(check, 0, sizeof(check));
     queue<Point> g;
     g.push(swanPos[0]);
@@ -100,8 +110,8 @@ bool isSameSection(){
             if(!inRange(ny, nx)) continue;
             if(map[ny][nx] == ice) continue;
             if(check[ny][nx]) continue;
-
-            if(map[ny][nx] == swan){
+            /* inRange and isWater and isVisited  */
+            if(ny == swanPos[1].y && nx == swanPos[1].x){
                 return true;
             }else{
                 g.push(Point(ny, nx));
