@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <queue>
-#include <cstring>
 #define endl "\n"
 #define water 0
 #define ice 1
@@ -23,7 +22,7 @@ bool check[1500][1500];
 
 vector<Point> swanPos;
 queue<Point> waterQ;
-
+queue<Point> g;
 inline bool inRange(int y, int x){
     return ((y >= 0 && y < row) && (x >= 0 && x < col));
 }
@@ -98,9 +97,8 @@ void melting(){
 }
 
 bool isSameSection(){
-    memset(check, 0, sizeof(check));
-    queue<Point> g;
-    g.push(swanPos[0]);
+    queue<Point> nextStep;
+    
     while(!g.empty()){
         Point tmp = g.front(); g.pop();
         int y = tmp.y, x = tmp.x;
@@ -108,7 +106,10 @@ bool isSameSection(){
             const int ny = y + dir[dy];
             const int nx = x + dir[dx];
             if(!inRange(ny, nx)) continue;
-            if(map[ny][nx] == ice) continue;
+            if(map[ny][nx] == ice){
+                nextStep.push(Point(ny, nx));
+                continue;
+            }
             if(check[ny][nx]) continue;
             /* inRange and isWater and isVisited  */
             if(ny == swanPos[1].y && nx == swanPos[1].x){
@@ -119,6 +120,8 @@ bool isSameSection(){
             }
         }
     }
+    g = move(nextStep);
+
     return false;
 }
 
@@ -135,12 +138,18 @@ int dfsSolve(){
     return retDays;
 }
 
+void initStart(){
+    g.push(swanPos[0]);
+    check[swanPos[0].y][swanPos[0].x] = true;
+}
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
     cin >> row >> col;
     input();
+    initStart();
     cout << dfsSolve() << endl;
     return 0;
 }
