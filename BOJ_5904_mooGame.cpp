@@ -37,7 +37,7 @@ char DQ(int vec_index){
         n -= prev_leng + moo_leng;
         return DQ(vec_index - 1);
     }else{
-        if(n - 1 == prev_leng){
+        if(n == prev_leng + 1){
             return 'm';
         }else{
             return 'o';
