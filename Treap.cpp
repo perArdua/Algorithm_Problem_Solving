@@ -1,3 +1,6 @@
+#ifndef __Treap__
+#define __Treap__
+
 #include <iostream>
 #include <utility>
 #include <cstdlib>
@@ -73,3 +76,5 @@ Node* erase(Node* root, KeyType key){
         root -> setRight(erase(root -> right, key));
     return root;
 }
+
+#endif
