@@ -3,42 +3,39 @@
 #define endl "\n"
 
 using namespace std;
-
-int n, r, c;
-int cnt = 0;
-void recursion(int y, int x, int exp){
+typedef unsigned long long ull;
+ull n, r, c;
+ull cnt = 0;
+void recursion(ull y, ull x, ull exp){
     /* basis */
+    // 3 1 4 -> 19
     if(exp == 2){
-        if(y == r && x == c){
-            cout << cnt << endl;
-            return ;
+        ull delta_row = r - x;
+        ull delta_col = c - y;
+        if(delta_row && delta_col){
+            cnt += 3;
+        }else if(delta_col){
+            cnt += 1;
+        }else if(delta_row){
+            cnt += 2;
         }
-        ++cnt;
-        if(y == r && x + 1 == c){
-            cout << cnt << endl;
-            return ;
-        }
-        ++cnt;
-        if(y + 1 == r && x == c){
-            cout << cnt << endl;
-            return ;
-        }
-        ++cnt;
-        if(y + 1 == r && x + 1 == c){
-            cout << cnt << endl;
-            return ;
-        }
-        ++cnt;
+        cout << cnt << endl;
         return ;
     }
-
-    int div = exp / 2;
-    recursion(y, x, div);
-    recursion(y, x + div, div);
-    recursion(y + div, x, div);
-    recursion(y + div, x + div, div);
+    ull div = exp / 2;
+    if(r < div + x && c < div + y){
+        recursion(y, x, div);
+    }else if(r < div + x && c >= div + y){
+        cnt += div * div;
+        recursion(y + div, x , div);
+    }else if(r >= div + x && c < div + y){
+        cnt += 2 * div * div;
+        recursion(y, x + div, div);
+    }else if (r >= div + x && c >= div + y){
+        cnt += 3 * div * div;
+        recursion(y + div, x + div, div);
+    }
 }
-
 
 int main(){
     ios_base::sync_with_stdio(false);
