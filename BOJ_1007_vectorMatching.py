@@ -24,5 +24,3 @@ for _ in range(int(test_case)):
         res = sqrt((plus_x - minus_x) ** 2 + (plus_y - minus_y) ** 2)
         ans = res if res < ans else ans
     print("%.6lf" % ans)
-
-    2304 1007 3019 3986
