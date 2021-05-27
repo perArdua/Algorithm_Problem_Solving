@@ -12,13 +12,6 @@ def cmp(x, y):
     left, right = x + y, y + x
     return 1 if left > right else 0 if left == right else -1
 
-def cmp2(x, y):
-    len_x, len_y = len(x), len(y)
-    if len_x == len_y:
-        a, b = int(x), int(y)
-        return 1 if a > b else 0 if a == b else -1
-    return 1 if len_x > len_y else 0 if len_x == len_y else -1
-
 def reverse(x):
     ret = ''
     for i in x[::-1]:
@@ -26,8 +19,7 @@ def reverse(x):
     return ret
 
 arr = [reverse(x) for x in input().rstrip().split()]
-arr.sort(key=cmp_to_key(cmp2))
+arr.sort(key=lambda x : (len(x), int(x)))
 arr += [arr[-1]]
 arr.sort(key=cmp_to_key(cmp))
 print(''.join(map(reverse, arr)))
-print(arr)
