@@ -70,7 +70,7 @@ int main(){
             int ny = y + dy[dir], nx = x + dx[dir];
             if(!inRange(ny, nx)) continue;
             if(visited[ny][nx]) continue;
-            if(0 < a[ny][nx] && vol < a[ny][nx]) continue;
+            if(vol < a[ny][nx]) continue;
             q.push({d + 1, ny, nx});
             visited[ny][nx] = true;
         }
