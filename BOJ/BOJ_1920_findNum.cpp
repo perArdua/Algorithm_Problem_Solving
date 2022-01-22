@@ -5,6 +5,7 @@
 
 using namespace std;
 
+
 int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
@@ -26,7 +27,7 @@ int main(){
     }
     sort(src.begin(), src.end());
     for(auto e : dest){
-        if(find(src.begin(), src.end(), e) != src.end()){
+        if(binary_search(src.begin(), src.end(), e)){
             cout << 1 << endl;
         }else{
             cout << 0 << endl;
